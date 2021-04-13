@@ -27,6 +27,16 @@ public class StudentDetails {
 
     private String yearOfStudy;
 
+    private Long phoneNumber;
+
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getLevel() {
         return level;
     }

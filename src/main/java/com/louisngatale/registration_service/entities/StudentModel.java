@@ -11,7 +11,7 @@ import java.util.List;
 public class StudentModel {
     private String fullName;
     private String registrationNumber;
-    private Integer phoneNumber;
+    private Long phoneNumber;
     private String password;
     private String level;
     private String course;
@@ -34,11 +34,11 @@ public class StudentModel {
         this.registrationNumber = registrationNumber;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
