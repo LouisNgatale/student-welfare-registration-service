@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private String id;
+    private Integer id;
 
     @Column(nullable=false)
     private String fullName;
@@ -39,4 +39,20 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id",
                     referencedColumnName = "id")})
     private List<Roles> roles;
+
+    public User() {
+
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public User(String fullName, String gender, String loginId, String password, List<Roles> roles) {
+        this.fullName = fullName;
+        this.gender = gender;
+        this.loginId = loginId;
+        this.password = password;
+        this.roles = roles;
+    }
 }
