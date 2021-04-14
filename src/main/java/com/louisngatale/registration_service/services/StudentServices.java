@@ -12,6 +12,8 @@ import com.louisngatale.registration_service.security.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class StudentServices {
     @Autowired
     private StudentDetailsRepository detailsRepository;
 
+    @Transactional
     public StudentModel createStudent(StudentModel model){
         boolean userExists = userRepository
                 .findByloginId(model
@@ -75,5 +78,10 @@ public class StudentServices {
             throw new ApiRequestException("User already exists");
         }
 
+    }
+
+//    Generate json token for the user after registration
+    public String authenticateUser(){
+        return null;
     }
 }
