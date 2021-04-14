@@ -4,6 +4,7 @@ import com.louisngatale.registration_service.entities.Roles;
 import com.louisngatale.registration_service.entities.StudentDetails;
 import com.louisngatale.registration_service.entities.StudentModel;
 import com.louisngatale.registration_service.entities.User;
+import com.louisngatale.registration_service.exceptions.ApiRequestException;
 import com.louisngatale.registration_service.repositories.RolesRepository;
 import com.louisngatale.registration_service.repositories.StudentDetailsRepository;
 import com.louisngatale.registration_service.repositories.UserRepository;
@@ -33,13 +34,11 @@ public class StudentServices {
 
     public StudentModel createStudent(StudentModel model){
         boolean userExists = userRepository
-                .findByloginId(model.getRegistrationNumber())
+                .findByloginId(model
+                        .getRegistrationNumber())
                 .isPresent();
 
-
-        if (userExists){
-            throw new IllegalStateException("Registration number already taken");
-        }else {
+        if (!userExists) {
 
 //        Initialize roles list object
             roles = new ArrayList<>();
@@ -72,6 +71,8 @@ public class StudentServices {
 
 //        detailsRepository.save();
             return model;
+        } else {
+            throw new ApiRequestException("User already exists");
         }
 
     }

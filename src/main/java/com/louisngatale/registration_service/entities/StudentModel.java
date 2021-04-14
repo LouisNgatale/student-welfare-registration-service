@@ -1,10 +1,10 @@
 package com.louisngatale.registration_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
-
-
 
 @Getter
 @Setter
@@ -12,6 +12,7 @@ public class StudentModel {
     private String fullName;
     private String registrationNumber;
     private Long phoneNumber;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String level;
     private String course;
