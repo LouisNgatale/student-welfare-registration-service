@@ -29,6 +29,10 @@ public class StudentDetails {
 
     private Long phoneNumber;
 
+    private String sponsorship = "PERSONAL";
+
+    private String roomId;
+
     public Long getPhoneNumber() {
         return phoneNumber;
     }
@@ -51,6 +55,30 @@ public class StudentDetails {
 
     public void setStudentId(User studentId) {
         this.studentId = studentId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getSponsorship() {
+        return sponsorship;
+    }
+
+    public void setSponsorship(String sponsorship) {
+        this.sponsorship = sponsorship;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     public String getCourse() {

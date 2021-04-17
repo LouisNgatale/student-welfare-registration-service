@@ -8,8 +8,16 @@ import com.louisngatale.registration_service.exceptions.ApiRequestException;
 import com.louisngatale.registration_service.repositories.RolesRepository;
 import com.louisngatale.registration_service.repositories.StudentDetailsRepository;
 import com.louisngatale.registration_service.repositories.UserRepository;
+import com.louisngatale.registration_service.security.JwtUtil;
 import com.louisngatale.registration_service.security.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +36,12 @@ public class StudentServices {
     @Autowired
     private RolesRepository rolesRepository;
 
+    @Autowired
+    public AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
 //    TODO: User roles enum
     private List<Roles> roles;
 
@@ -35,14 +49,13 @@ public class StudentServices {
     private StudentDetailsRepository detailsRepository;
 
     @Transactional
-    public StudentModel createStudent(StudentModel model){
+    public String createStudent(StudentModel model){
+        String registrationNumber = model.getRegistrationNumber();
         boolean userExists = userRepository
-                .findByloginId(model
-                        .getRegistrationNumber())
+                .findByloginId(registrationNumber)
                 .isPresent();
 
         if (!userExists) {
-
 //        Initialize roles list object
             roles = new ArrayList<>();
 
@@ -52,15 +65,10 @@ public class StudentServices {
             String encodedPassword = passwordEncoder.encode(model.getPassword());
 
 //        Create new user (Student) object for saving
-            User newStudent = new User(model.getFullName(),
-                    model.getGender(),
-                    model.getRegistrationNumber(),
-                    encodedPassword,
-                    roles);
+            User newStudent = new User(model.getFullName(), model.getGender(), registrationNumber, encodedPassword, roles);
 
 //        Save student object and get the id
-            User studentObj = userRepository.saveAndFlush(newStudent);
-
+            User studentObj = userRepository.save(newStudent);
 //        Create instance of new student details to link to the user
             StudentDetails studentDetails = new StudentDetails();
             studentDetails.setCourse(model.getCourse());
@@ -73,7 +81,7 @@ public class StudentServices {
             detailsRepository.save(studentDetails);
 
 //        detailsRepository.save();
-            return model;
+            return generateToken(registrationNumber);
         } else {
             throw new ApiRequestException("User already exists");
         }
@@ -81,7 +89,15 @@ public class StudentServices {
     }
 
 //    Generate json token for the user after registration
-    public String authenticateUser(){
-        return null;
+    public String generateToken(String username){
+        try {
+//            Generate jwt
+            final String jwt = jwtUtil.generateToken(username);
+
+//            Return jwt
+            return jwt;
+        }catch (Exception e){
+            throw new ApiRequestException("Couldn't generate token for the user!", e);
+        }
     }
 }

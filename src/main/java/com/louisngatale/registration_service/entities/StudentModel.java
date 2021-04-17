@@ -12,7 +12,7 @@ public class StudentModel {
     private String fullName;
     private String registrationNumber;
     private Long phoneNumber;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String level;
     private String course;
