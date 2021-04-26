@@ -1,9 +1,6 @@
 package com.louisngatale.registration_service.services;
 
-import com.louisngatale.registration_service.entities.Roles;
-import com.louisngatale.registration_service.entities.StudentDetails;
-import com.louisngatale.registration_service.entities.StudentModel;
-import com.louisngatale.registration_service.entities.User;
+import com.louisngatale.registration_service.entities.*;
 import com.louisngatale.registration_service.exceptions.ApiRequestException;
 import com.louisngatale.registration_service.repositories.RolesRepository;
 import com.louisngatale.registration_service.repositories.StudentDetailsRepository;
@@ -98,6 +95,33 @@ public class StudentServices {
             return jwt;
         }catch (Exception e){
             throw new ApiRequestException("Couldn't generate token for the user!", e);
+        }
+    }
+
+    public String createAdmin(AdminModel model) {
+        String loginId = model.getLoginId();
+        boolean userExists = userRepository
+                .findByloginId(loginId)
+                .isPresent();
+
+        if (!userExists) {
+//        Initialize roles list object
+            roles = new ArrayList<>();
+
+//        Create array of student roles
+            roles.add(rolesRepository.findByRole("ADMIN"));
+            roles.add(rolesRepository.findByRole("REGISTRAR"));
+            roles.add(rolesRepository.findByRole("HOD"));
+            roles.add(rolesRepository.findByRole("DEAN"));
+
+            String encodedPassword = passwordEncoder.encode(model.getPassword());
+
+//        Create new user (Student) object for saving
+            User newStudent = new User(model.getFullName(), model.getGender(), loginId, encodedPassword, roles);
+            userRepository.save(newStudent);
+            return generateToken(loginId);
+        } else {
+            throw new ApiRequestException("User already exists");
         }
     }
 }
